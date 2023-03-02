@@ -14,18 +14,43 @@ let dataBaseConnectionObject = null       //Defined a variable for storing the d
 //We are performing the operation on the database it is an asynchronous operation. Hence we are using asynchronous function 
 const initializeDBAndServer = async() =>{
         try{
-            dataBaseConnectionObject = await  dataBaseConnectionObject.open({
+            dataBaseConnectionObject = await open({
                 filename : dbPath,
                 driver : sqlite3.Database
             })
         }catch(e){
             console.log(`Database Error ${e.message}`)
+            process.exit(1)
         }
 
-        expressAppInstance.listen(3010, ()=>{
-            console.log('Server started listening at the following url http://localhost:3010/')
+        expressAppInstance.listen(3011, ()=>{
+            console.log('Server started listening at the following url http://localhost:3011/')
         })
         
 }
 
-initializeDBAndServer() //called the function to get datebase connection object and initilize server
+initializeDBAndServer() //called the function to get database connection object and initialize server
+
+//lets check if we are properly getting the database connection object and initializing the server correctly
+//As per my verification the code is working as intended
+
+//Lets now define the APIs
+
+
+//getPlayersList API
+
+expressAppInstance.get('/players/', async (request, response)=>{
+    const getPlayersQuery = `
+    SELECT 
+    * 
+    FROM 
+    cricket_team 
+    ORDER BY player_id;`;
+    const playersArray = await dataBaseConnectionObject.all(getPlayersQuery)
+    console.log(playersArray)
+    response.send(playersArray);
+})
+
+//Successfully defined the api getPlayers
+
+
