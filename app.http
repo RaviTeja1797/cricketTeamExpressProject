@@ -9,3 +9,6 @@ Content-Type: application/json
   "jerseyNumber": 17,
   "role": "Bowler"
 }
+###
+
+GET http://localhost:3011/players/1
