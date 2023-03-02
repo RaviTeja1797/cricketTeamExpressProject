@@ -54,3 +54,22 @@ expressAppInstance.get('/players/', async (request, response)=>{
 //Successfully defined the api getPlayers
 
 
+//addPlayer API
+
+expressAppInstance.post('/players/', async(request, response)=>{
+    const playerDetails = request.body;
+    const {playerName,jerseyNumber,role} = playerDetails;
+    const addPlayerQuery = `
+        INSERT INTO cricket_team(player_name,jersey_number,role)
+        VALUES('${playerName}',${jerseyNumber},'${role}')`;
+    try{    
+        const responseObject = await dataBaseConnectionObject.run(addPlayerQuery)
+        response.send('Player added to team')
+    }catch(e){
+        console.log(`SQL error ${e.message}`)
+    }
+})
+
+//successfully added addPlayer functionality
+
+
