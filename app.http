@@ -22,3 +22,6 @@ Content-Type: application/json
   "jerseyNumber": 54,
   "role": "All-rounder"
 }
+###
+
+DELETE http://localhost:3011/players/2

@@ -44,8 +44,7 @@ expressAppInstance.get('/players/', async (request, response)=>{
     SELECT 
     * 
     FROM 
-    cricket_team 
-    ORDER BY player_id;`;
+    cricket_team`;
     const playersArray = await dataBaseConnectionObject.all(getPlayersQuery)
     console.log(playersArray)
     response.send(playersArray);
@@ -64,7 +63,7 @@ expressAppInstance.post('/players/', async(request, response)=>{
         VALUES('${playerName}',${jerseyNumber},'${role}')`;
     try{    
         await dataBaseConnectionObject.run(addPlayerQuery)
-        response.send('Player added to team')
+        response.send('Player Added to Team')
     }catch(e){
         console.log(`SQL error ${e.message}`)
     }
@@ -75,12 +74,12 @@ expressAppInstance.post('/players/', async(request, response)=>{
 
 //getPlayer API
 
-expressAppInstance.get('/players/:playerId/', async(request, response)=>{
-    const{playerId} = request.params;
+expressAppInstance.get('/players/:requiredPlayerToBeDisplayed/', async(request, response)=>{
+    const{requiredPlayerToBeDisplayed} = request.params;
     const getPlayerQuery = `
     SELECT *
     FROM cricket_team
-    WHERE player_id = ${playerId}
+    WHERE player_id = ${requiredPlayerToBeDisplayed}
     `
    try{
     const responseObject =  await dataBaseConnectionObject.get(getPlayerQuery)
@@ -97,8 +96,8 @@ expressAppInstance.get('/players/:playerId/', async(request, response)=>{
 
 //updatePlayerList API
 
-expressAppInstance.put('/players/:playerId/', async(request, response)=>{
-    const {playerId} = request.params;
+expressAppInstance.put('/players/:playerIdToBeUpdated/', async(request, response)=>{
+    const {playerIdToBeUpdated} = request.params;
     const updatedPlayerDetails = request.body;
     const{playerName,jerseyNumber,role} = updatedPlayerDetails;
 
@@ -107,11 +106,11 @@ expressAppInstance.put('/players/:playerId/', async(request, response)=>{
     SET player_name = '${playerName}', 
     jersey_number = ${jerseyNumber},
     role = '${role}'
-    WHERE player_id = ${playerId}
+    WHERE player_id = ${playerIdToBeUpdated}
     `
     try{
         await dataBaseConnectionObject.run(updatePlayerQuery)
-        response.send('Player Details updated')
+        response.send('Player Details Updated')
     }catch(e){
         console.log(`SQL Error ${e.message}`)
     }    
@@ -119,4 +118,27 @@ expressAppInstance.put('/players/:playerId/', async(request, response)=>{
 
 
 //successfully added the API updatePlayer
+
+
+//DeletePlayer API
+
+expressAppInstance.delete('/players/:playerIdToBEDeleted/', async(request, response)=>{
+    const {playerIdToBEDeleted} = request.params;
+    const deletePlayerQuery = `
+    DELETE FROM cricket_team
+    WHERE player_id = ${playerIdToBEDeleted}
+    `
+    try{
+        await dataBaseConnectionObject.run(deletePlayerQuery)
+        response.send('Player Removed')    
+    }catch(e){
+        console.log(`SQL Error ${e.message}`)
+    }
+    
+})
+
+//successfully defined all the APIs
+
+
+module.exports = expressAppInstance
 
