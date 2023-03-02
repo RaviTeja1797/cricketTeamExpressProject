@@ -95,6 +95,28 @@ expressAppInstance.get('/players/:playerId/', async(request, response)=>{
 //Successfully Defined getPlayers API
 
 
-//
+//updatePlayerList API
 
+expressAppInstance.put('/players/:playerId/', async(request, response)=>{
+    const {playerId} = request.params;
+    const updatedPlayerDetails = request.body;
+    const{playerName,jerseyNumber,role} = updatedPlayerDetails;
+
+    const updatePlayerQuery = `
+    UPDATE cricket_team
+    SET player_name = '${playerName}', 
+    jersey_number = ${jerseyNumber},
+    role = '${role}'
+    WHERE player_id = ${playerId}
+    `
+    try{
+        await dataBaseConnectionObject.run(updatePlayerQuery)
+        response.send('Player Details updated')
+    }catch(e){
+        console.log(`SQL Error ${e.message}`)
+    }    
+})
+
+
+//successfully added the API updatePlayer
 
