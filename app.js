@@ -23,8 +23,8 @@ const initializeDBAndServer = async() =>{
             process.exit(1)
         }
 
-        expressAppInstance.listen(3011, ()=>{
-            console.log('Server started listening at the following url http://localhost:3011/')
+        expressAppInstance.listen(3000, ()=>{
+            console.log('Server started listening at the following url http://localhost:3000/')
         })
         
 }
@@ -46,8 +46,19 @@ expressAppInstance.get('/players/', async (request, response)=>{
     FROM 
     cricket_team`;
     const playersArray = await dataBaseConnectionObject.all(getPlayersQuery)
-    console.log(playersArray)
-    response.send(playersArray);
+       
+    const playersArrayWithCamelCaseProperties = []
+    playersArray.forEach((eachPlayerObject, len, arr)=>{ 
+        let tempPlayerObject = {
+            playerId : eachPlayerObject["player_id"],
+            playerName: eachPlayerObject["player_name"],
+            jerseyNumber: eachPlayerObject["jersey_number"],
+            role: eachPlayerObject["role"]
+        }
+        playersArrayWithCamelCaseProperties.push(tempPlayerObject)
+    })
+
+    response.send(playersArrayWithCamelCaseProperties)
 })
 
 //Successfully defined the api getPlayers
@@ -83,12 +94,19 @@ expressAppInstance.get('/players/:requiredPlayerToBeDisplayed/', async(request, 
     `
    try{
     const responseObject =  await dataBaseConnectionObject.get(getPlayerQuery)
-    response.send(responseObject)
+    
+    let PlayerObject = {
+        playerId : responseObject["player_id"],
+        playerName: responseObject["player_name"],
+        jerseyNumber: responseObject["jersey_number"],
+        role: responseObject["role"]
+    }
+
+    response.send(PlayerObject)
    }
    catch(e){
        console.log(`SQL error ${e.message}`)
    }
-
 })
 
 //Successfully Defined getPlayers API
